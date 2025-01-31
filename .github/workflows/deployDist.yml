@@ -10,6 +10,10 @@ on:
     # Whenever a change will occur in this file, the workflow will not be triggered.
     paths-ignore: 
       - README.md
+
+  # We can also use workflow_dispatch to manually trigger the workflow.
+    workflow_dispatch:
+      
 # IF I don't want the workflow to be triggered, we can write [skip ci] in the commit message.
 
 jobs: 
