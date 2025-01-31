@@ -1,0 +1,14 @@
+name: greeting
+
+on: [push, workflow_dispatch]
+
+jobs: 
+  greet:
+    # using runs-on, we can specify the operating system on which the job will run
+    runs-on: ubuntu-latest
+    steps: 
+      - name: "clone code"
+        run: |
+        echo "Cloning Repository.."
+        echo "${{toJson(github)}}"
+        git clone https://github.com/${{github.repository}}.git
