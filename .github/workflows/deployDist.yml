@@ -37,6 +37,7 @@ jobs:
         run: npm run test
 
   deploy:
+    # This is called sequential chaining of jobs, i.e means the deploy job will run after the Test job is completed.
     needs: test
     # using runs-on, we can specify the operating system on which the job will run
     runs-on: ubuntu-latest
