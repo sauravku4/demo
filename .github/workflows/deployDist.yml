@@ -9,6 +9,6 @@ jobs:
     steps: 
       - name: "clone code"
         run: |
-        echo "Cloning Repository.."
-        echo "${{toJson(github)}}"
-        git clone https://github.com/${{github.repository}}.git
+          echo "Cloning Repository.."
+          echo "${{toJson(github)}}"
+          git clone https://github.com/${{github.repository}}.git

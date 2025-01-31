@@ -4,7 +4,9 @@ on: [push, workflow_dispatch]
 
 jobs: 
   greet:
+    # using runs-on, we can specify the operating system on which the job will run
     runs-on: ubuntu-latest
     steps: 
       - name: "Greet User"
+    # echo is used to print the message on the console
         run : echo "Hello world"
