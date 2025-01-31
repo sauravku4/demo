@@ -1,6 +1,15 @@
 name: greeting
 
-on: [push, workflow_dispatch]
+#on: [push, workflow_dispatch]
+
+on:
+  push:
+    # The workflow will be triggered whenever a push event occurs in these branches.
+    branches:
+      - main
+    # Whenever a change will occur in this file, the workflow will not be triggered.
+    paths-ignore: 
+      - README.md
 # IF I don't want the workflow to be triggered, we can write [skip ci] in the commit message.
 
 jobs: 
