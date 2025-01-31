@@ -3,8 +3,8 @@ name: greeting
 on: [push, workflow_dispatch]
 
 jobs: 
-    greet:
-        runs-on: ubunto-latest
-        steps: 
-            - name: "Greet User"
-              run : echo "Hello world"
+  greet:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: "Greet User"
+        run : echo "Hello world"
