@@ -2,7 +2,7 @@ name: greeting
 
 on: push
 
-job: 
+jobs: 
     greet:
         runs-on: ubunto-latest
         steps: 
