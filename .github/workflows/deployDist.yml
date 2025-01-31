@@ -3,7 +3,7 @@ name: greeting
 on: [push, workflow_dispatch]
 
 jobs: 
-  greet:
+  Test:
     # using runs-on, we can specify the operating system on which the job will run
     runs-on: ubuntu-latest
     steps: 
@@ -22,7 +22,7 @@ jobs:
       # We can use the actions/checkout@v2 action to clone the repository.
         uses: actions/checkout@v2
       - name: Install Node 20
-        uses: action/setup-node@v4
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -31,6 +31,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
-        
+
       - name: Run Tests
         run: npm run test
