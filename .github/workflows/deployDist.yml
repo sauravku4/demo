@@ -1,0 +1,106 @@
+name: greeting
+
+#on: [push, workflow_dispatch]
+
+on:
+  push:
+    # The workflow will be triggered whenever a push event occurs in these branches.
+    branches:
+      - main
+    # Whenever a change will occur in this file, the workflow will not be triggered.
+    paths-ignore: 
+      - README.md
+
+  # We can also use workflow_dispatch to manually trigger the workflow.
+    workflow_dispatch:
+      
+# IF I don't want the workflow to be triggered, we can write [skip ci] in the commit message.
+
+jobs: 
+  Test:
+    # using runs-on, we can specify the operating system on which the job will run
+    runs-on: ubuntu-latest
+    steps: 
+      - name: "clone code"
+
+      # We use | to write multiple lines of code
+      # We use ${{ }} to access the context of the workflow
+      # We use toJson() to convert the context to JSON format
+      # Right now We are manually cloning our code into the ubuntu-latest OS Platform.
+        
+#        run: |
+#         echo "Cloning Repository.."
+#          echo "${{toJson(github)}}"
+#          git clone https://github.com/${{github.repository}}.git
+
+      # We can use the actions/checkout@v2 action to clone the repository.
+        uses: actions/checkout@v2
+      - name: Install Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: print node version
+        run: node -v
+
+      # Right now we are installing the dependencies of our project.
+      #  And we will install them again in the deploy job.
+      #  So to save time, we can use the cache action to cache the dependencies.
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm run test
+
+  build:
+    # This is called sequential chaining of jobs, i.e means the deploy job will run after the Test job is completed.
+    needs: test
+    # using runs-on, we can specify the operating system on which the job will run
+    runs-on: ubuntu-latest
+    steps: 
+      - name: "clone code"
+      # We can use the actions/checkout@v2 action to clone the repository.
+        uses: actions/checkout@v2
+      - name: Install Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Built code
+        run: npm run build
+
+      # Here we will upload the build artifacts to the server and we will latet download it as we will need it.
+      - name: Upload Dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist
+
+  deploy:
+    # This is called sequential chaining of jobs, i.e means the deploy job will run after the build job is completed.
+    needs: build
+    # using runs-on, we can specify the operating system on which the job will run
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Download Dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: dist
+      - name: Deploy code
+        run: echo "Deploying code to server"
