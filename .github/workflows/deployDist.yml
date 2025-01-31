@@ -37,6 +37,7 @@ jobs:
         run: npm run test
 
   deploy:
+    needs: test
     # using runs-on, we can specify the operating system on which the job will run
     runs-on: ubuntu-latest
     steps: 
