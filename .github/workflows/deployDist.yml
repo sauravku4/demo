@@ -58,7 +58,7 @@ jobs:
       - name: Run Tests
         run: npm run test
 
-  deploy:
+  build:
     # This is called sequential chaining of jobs, i.e means the deploy job will run after the Test job is completed.
     needs: test
     # using runs-on, we can specify the operating system on which the job will run
@@ -83,5 +83,24 @@ jobs:
 
       - name: Built code
         run: npm run build
+
+      # Here we will upload the build artifacts to the server and we will latet download it as we will need it.
+      - name: Upload Dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist
+
+  deploy:
+    # This is called sequential chaining of jobs, i.e means the deploy job will run after the build job is completed.
+    needs: build
+    # using runs-on, we can specify the operating system on which the job will run
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Download Dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: dist
       - name: Deploy code
         run: echo "Deploying code to server"
