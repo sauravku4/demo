@@ -52,6 +52,6 @@ jobs:
         run: npm ci
 
       - name: Built code
-        run: npm run built
+        run: npm run build
       - name: Deploy code
         run: echo "Deploying code to server"
